@@ -1,0 +1,21 @@
+[build-system]
+requires = ["flit_core >=2,<4"]
+build-backend = "flit_core.buildapi"
+
+[tool.flit.metadata]
+module = "dra818vhf"
+author = "Colin Vallance"
+author-email = "colin@cvallance.net"
+home-page = "https://github.com/crvallance/DRA818VHF"
+requires = [
+    "pyserial >=3.4",
+]
+
+[tool.flit.metadata.requires-extra]
+test = [
+    "pytest >=2.7.3",
+    "pytest-cov",
+]
+dev = [
+    "flake8"
+]
