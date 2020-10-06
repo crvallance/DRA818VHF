@@ -1,3 +1,4 @@
 testing.py
 settings.json
 .vscode
+*.pyc
