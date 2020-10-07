@@ -2,17 +2,20 @@ import serial
 
 
 class DRA818VHF(object):
-    def __init__(self):
-        self.__serialport: str = '/dev/ttyO4'
-        self.__baud: int = 9600
-        self.__timeout: int = 1
+    def __init__(self, serialport='/dev/ttyO4', baud=9600, timeout=1):
+        self.serialport: str = serialport
+        self.baud: int = baud
+        self.timeout: int = timeout
 
     def __del__(self):
-        self.conn.close()
+        try:
+            self.conn.close()
+        except AttributeError:
+            pass
 
     def _connect(self):
         try:
-            self.conn = serial.Serial(self.__serialport, self.__baud, timeout=self.__timeout)
+            self.conn = serial.Serial(self.serialport, self.baud, timeout=self.timeout)
         except serial.SerialException as e:
             print(f'Connection issue: {e}')
 
@@ -23,7 +26,7 @@ class DRA818VHF(object):
             return(self.conn.readline())
         except ValueError:
             print()
-            raise SystemExit('Failed handshake.  Retrying')
+            raise ValueError('Failed handshake.  Retrying')
 
     def _ensure_connection(self):
         for _ in range(3):
@@ -35,7 +38,15 @@ class DRA818VHF(object):
             else:
                 break
         else:
-            raise SystemExit('Failed handshake.  Exiting')
+            raise ValueError('Failed handshake.  Exiting')
+
+    def check_volume(self, setvol: int):
+        try:
+            if 1 <= setvol <= 8:
+                return(True)
+        except ValueError:
+            print(f'{setvol} is not between 1 and 8')
+            raise
 
     def set_volume(self, setvol: int):
         self._ensure_connection()
@@ -52,3 +63,12 @@ class DRA818VHF(object):
             print('Volume set failed')
         else:
             raise NotImplementedError
+
+    def set_freq_scan(self):
+        pass
+
+    def set_group(self):
+        pass
+
+    def set_filter(self):
+        pass
